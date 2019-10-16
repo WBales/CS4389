@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // This demonstrates how an endpoint is written in Node.JS w/ Express
 app.post("/testendpoint", function(req, res) {
   console.log("DEBUG: ", req.body);
-  var x = new Symmetric();
+  var x = new Symmetric("ADWADWAWAD", 14515151); //just an example
 
   //this demonstrates what a JSON messeage is formatted like
   var testJSON = {
