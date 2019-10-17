@@ -13,12 +13,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // This demonstrates how an endpoint is written in Node.JS w/ Express
 app.post("/testendpoint", function(req, res) {
   console.log("DEBUG: ", req.body);
-  var sessionKey = new SessionKey(1234, 6789);
-  var alice = new Player(1234, sessionKey);
-  var bob = new Player(6789, sessionKey);
+  //var sessionKey = new SessionKey(1234, 6789);
+  var alice = new Player(1234);
+  var bob = new Player(6789);
+  var sessionKey2 = new SessionKey(alice, bob);
 
-  var encryptedAlice = alice.cipherText("Encrypt Me")
-  var decryptedBob = bob.plainText(encryptedAlice)
+
+  var encryptedAlice = alice.calcCipher("Encrypt Me")
+  var decryptedBob = bob.calcPlain(encryptedAlice)
 
   //this demonstrates what a JSON messeage is formatted like
   var testJSON = {
@@ -31,5 +33,14 @@ app.post("/testendpoint", function(req, res) {
 });
 
 app.listen(PORT, function() {
-  console.log(`Security app listening on port ${PORT}!`);
+  //console.log(`Security app listening on port ${PORT}!`);
+  var alice = new Player(1234);
+  var bob = new Player(6789);
+  var sessionKey2 = new SessionKey(alice, bob);
+
+  var encryptedAlice = alice.calcCipher("Encrypt Me");
+  var decryptedBob = bob.calcPlain(encryptedAlice);
+
+  alert(encryptedAlice);
+  alert(decryptedBob);
 });

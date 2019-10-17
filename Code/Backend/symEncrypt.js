@@ -11,5 +11,6 @@ class symEncrypt{
     calcCipher(){
         return (`${plainText} is now encrypted with ${this.key}`)
     }
-
 }
+
+export default class symEncrypt {}

@@ -4,28 +4,31 @@ const symEncrypt = require("./symEncrypt.js");
 const symDecypt = require("./symDecrypt.js");
 
 class Player {
-  cipherText;
-  sessionKey;
-  plainText;
+  //cipherText;
+  //sessionKey;
+  //plainText;
 
-  
-  constructor(key, sessionKey) {
+  constructor(key) {
     this.key = key;
-    this.sessionKey = sessionKey;
   }
 
   // Getter
-  get cipherText(plainText) {
-    return this.calcCipher(plainText);
+  get cipherText() {
+    return this.calcCipher();
   }
+
+  get key(){
+    return this.key;
+  }
+
   // Method
-  calcCipher() {
+  calcCipher(plainText) {
     var encrypted = symEncrypt(plainText, this.sessionKey)
     return encrypted.cipherText();
   }
 
-  get plainText(cipherText){
-    return this.calcPlain(cipherText);
+  get plainText(){
+    return this.calcPlain();
   }
 
   calcPlain(cipherText) {

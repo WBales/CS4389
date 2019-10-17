@@ -1,4 +1,4 @@
-class symmetric{
+class symDecrypt{
     constructor (cipherText, key){
         this.cipherTest = cipherText
         this.key = key
@@ -12,3 +12,5 @@ class symmetric{
         return (`${cipherText} is now decrypted with ${this.key}`)
     }
 }
+
+export default class symDecrypt {}

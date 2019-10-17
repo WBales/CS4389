@@ -1,15 +1,24 @@
+const Player = require("./player.js");
+
 class sessionKey{
-    constructor(firstKey, secondKey){
-        this.firstKey = firstKey
-        this.secondKey = secondKey
+    constructor(playerOne, playerTwo){
+        this.firstKey = playerOne.getKey;
+        this.secondKey = playerTwo.getKey;
     }
 
-    get sessionKey(){
-        return this.calcSessionKey()
+    setSessionKeys(){
+        playerOne.sessionKey(this.calcSessionKey)
+        playerTwo.sessionKey(this.calcSessionKey)
     }
 
     //placeholder algorithm
     calcSessionKey(){
-        return this.firstKey * this.secondKey
+        //playerOne.sessionKey(this.setSessionKey());
+        //playerTwo.sessionKey(this.setSessionKey());
+        //this.sessionKey = this.firstKey * this.secondKey
+        return (this.firstKey * this.secondKey)
+        //return this.firstKey * this.secondKey
     }
 }
+
+export default class sessionKey {}
