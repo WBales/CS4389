@@ -13,13 +13,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // This demonstrates how an endpoint is written in Node.JS w/ Express
 app.post("/testendpoint", function(req, res) {
   console.log("DEBUG: ", req.body);
-  var SessionKey = new SessionKey(1234, 6789);
+  var sessionKey = new SessionKey(1234, 6789);
   var alice = new Player(1234, sessionKey);
   var bob = new Player(6789, sessionKey);
 
+  var encryptedAlice = alice.cipherText("Encrypt Me")
+  var decryptedBob = bob.plainText(encryptedAlice)
+
   //this demonstrates what a JSON messeage is formatted like
   var testJSON = {
-    name: "YourMom",
+    name: "YourMom", //Gotem
     class: "CS 4389",
     tech: "Node.JS & Express"
   };
