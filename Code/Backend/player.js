@@ -4,46 +4,25 @@ const symEncrypt = require("./symEncrypt.js");
 const symDecypt = require("./symDecrypt.js");
 
 class Player {
-  //cipherText;
-  //sessionKey;
-  //plainText;
-
   constructor(key) {
-    this.key = key;
-  }
-
-  // Getter
-  get cipherText() {
-    return this.calcCipher();
-  }
-
-  get key(){
-    return this.key;
+    this.key = key;  
   }
 
   // Method
   calcCipher(plainText) {
-    var encrypted = symEncrypt(plainText, this.sessionKey)
-    return encrypted.cipherText();
-  }
-
-  get plainText(){
-    return this.calcPlain();
+    var _symEncrypt = new symEncrypt(plainText, this.sessionKey);
+    //var encrypted = _symEncrypt(plainText, this.sessionKey)
+    return _symEncrypt.calcCipher();
   }
 
   calcPlain(cipherText) {
-    var decrypted = symDecypt(cipherText, this.sessionKey)
-    return decrypted.plainText();
+    var _symDecrypt = new symDecypt(cipherText, this.sessionKey);
+    //var decrypted = symDecypt(cipherText, this.sessionKey)
+    return _symDecrypt.calcPlain();
   }
-
-  // How do setters work?
-  sessionKey(sessionKey){
-    this.sessionKey = sessionKey
-  }
-
 }
 
-export default class Player {}
+module.exports = Player
 
 /* USAGE in another file (like main.js)
 const player = require("./player.js");    //includes the class in other file

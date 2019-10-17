@@ -4,13 +4,9 @@ class symEncrypt{
         this.key = key
     }
 
-    get cipherText(){
-        return this.calcCipher();
-    }
-
     calcCipher(){
-        return (`${plainText} is now encrypted with ${this.key}`)
+        return (`${this.plainText} is now encrypted with ${this.key}`)
     }
 }
 
-export default class symEncrypt {}
+module.exports = symEncrypt
