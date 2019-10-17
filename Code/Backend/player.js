@@ -34,7 +34,7 @@ class Player {
   }
 
   // How do setters work?
-  set sessionKey(sessionKey){
+  sessionKey(sessionKey){
     this.sessionKey = sessionKey
   }
 
