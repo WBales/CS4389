@@ -17,7 +17,7 @@ class Symmetric {
   }
 }
 
-export default class Symmetric {}
+module.exports = Symmetric;
 
 /* USAGE in another file (like main.js)
 const Symmetric = require("./symmetric.js");    //includes the class in other file
