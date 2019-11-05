@@ -8,7 +8,6 @@ var allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type");
-  console.log("System configured");
   next();
 };
 
@@ -45,6 +44,11 @@ app.get("/newmsg", function(req, res) {
     }
   ];
   res.send(newMessages);
+});
+
+app.post("/msgrecieving", function(req, res) {
+  //req.body
+  res.send();
 });
 
 // EXAMPLE ENDPOINT

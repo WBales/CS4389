@@ -14,10 +14,13 @@ const MY_USER_ID = "apple"; //<--- The user name: probably important
 export default function MessageList(props) {
   const [messages, setMessages] = useState([]);
 
+  const msgCallback = dataToSend => {};
+
   useEffect(() => {
     getMessages();
   }, []);
 
+  //might have to rework this D:
   const getMessages = () => {
     axios.get(SERVER_IP_ADDR + "newmsg").then(response => {
       let newMessages = response.data;
@@ -100,7 +103,12 @@ export default function MessageList(props) {
         ]}
       />
 
-      <div className="message-list-container">{renderMessages()}</div>
+      <div
+        className="message-list-container"
+        callbackFromParent={this.msgCallback}
+      >
+        {renderMessages()}
+      </div>
 
       <Compose />
     </div>
