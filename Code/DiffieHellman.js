@@ -13,21 +13,21 @@ class Bob {
     this.s_key_Bob = 0;                             // Comparison value    Note: open connection if these values match
 }
   
-    B = bob_encrypt_shared_secret_Key_Outgoing(b);     // gets the shared secret key for the Encryption of Bob's message
-    s_key_Bob = decrypt_Alice_Incoming(A);             // gets the shared secret key for the Decryption of Alice's message
+bob_pub_key = bob_encrypt_shared_secret_Key_Outgoing(bob_priv_key);     // gets the shared secret key for the Encryption of Bob's message
+    s_key_Bob = decrypt_Alice_Incoming(alice_pub_key);             // gets the shared secret key for the Decryption of Alice's message
     //Note: still need to create a function to recieve and send the messages from/to Alice  
   
     function(){
      "use strict";
-      function bob_encrypt_shared_secret_Key_Outgoing(b){      // Bob's Encryption algorithm
-        Y = function(b){
+      function bob_encrypt_shared_secret_Key_Outgoing(bob_priv_key){      // Bob's Encryption algorithm
+        Y = function(bob_priv_key){
           var i;
           var calc = 0;
-          for(i = 0; i < b; i++)
+          for(i = 0; i < bob_priv_key; i++)
           {  
-            calc *= g; 
+            calc *= public_prime_base; 
           }
-          return (calc % p);
+          return (calc % public_prime_modulus);
       }
       return Y;
     }
@@ -36,15 +36,15 @@ class Bob {
 
   function(){
   "use strict";
-      function decrypt_Alice_Incoming(A){        // Bob's Decryption algorithm
-        W = function(A){
-          var i;
+      function decrypt_Alice_Incoming(alice_pub_key){        // Bob's Decryption algorithm
+        W = function(alice_pub_key){
+          var k;
           var calc = 0;
-          for(i = 0; i < b; i++)
+          for(k = 0; k < bob_priv_key; k++)
           {  
-             calc *= g; 
+             calc *= public_prime_base; 
           }
-          return (calc % p);
+          return (calc % public_prime_modulus);
       }
         return W;
     }
@@ -66,23 +66,23 @@ class Alice {
     this.s_key_Bob = 0;                             // Comparison value    Note: open connection if these values match
   }      // instatiate object with    // let key_sender_1 = Alice("name", "5", "23", "6", "8", "19", "0", "0");
   
- s_key_Alice = alice_encrypt_shared_secret_Key(a); // gets the shared secret key for the Encryption of Alice's message
- s_key_Bob = decrypt_Bob_Incoming(B);             // gets the shared secret key for the Decryption of Bob's message
+ s_key_Alice = alice_encrypt_shared_secret_Key(alice_pub_key); // gets the shared secret key for the Encryption of Alice's message
+ s_key_Bob = decrypt_Bob_Incoming(bob_pub_key);             // gets the shared secret key for the Decryption of Bob's message
     //Note: still need to create a function to recieve and send the messages from/to Bob  
   
   
   function(){
   "use strict";
-    function alice_encrypt_shared_secret_Key(a){      // Alice's Encryption algorithm
+    function alice_encrypt_shared_secret_Key(alice_pub_key){      // Alice's Encryption algorithm
 
-      X = function(a){
-          var i;
+      X = function(alice_pub_key){
+          var j;
           var calc = 0;
-          for(i = 0; i < a; i++)
+          for(j = 0; j < alice_pub_key; j++)
           {  
-            calc *= g; 
+            calc *= public_prime_base; 
           }
-          return (calc % p);
+          return (calc % public_prime_modulus);
       }
       return X;
     }
@@ -95,15 +95,15 @@ get ciphertext(){
 
   function(){
   "use strict";
-function decrypt_Bob_Incoming(B){        // Bob's Decryption algorithm
-        Z = function(B){
-          var i;
+function decrypt_Bob_Incoming(bob_pub_key){        // Bob's Decryption algorithm
+        Z = function(bob_pub_key){
+          var m;
           var calc = 0;
-          for(i = 0; i < a; i++)
+          for(m = 0; m < alice_pub_key; m++)
           {  
-             calc *= g; 
+             calc *= public_prime_base; 
           }
-          return (calc % p);
+          return (calc % public_prime_modulus);
       }
       return Z;
     }
