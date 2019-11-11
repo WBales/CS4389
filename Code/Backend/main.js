@@ -34,12 +34,12 @@ app.post("/testendpoint", function(req, res) {
 
 app.listen(PORT, function() {
   //console.log(`Security app listening on port ${PORT}!`);
-  var alice = new Player(1234);                 //Given some key for a player
-  var bob = new Player(6789);                   //Given some key for another player
+  var alice = new Player(12345);                 //Given some key for a player
+  var bob = new Player(56789);                   //Given some key for another player
   var sessionKey = new SessionKey(alice, bob);  //Generate a session key for the conversation
   //sessionKey.setSessionKeys();
 
-  var encryptedAlice = alice.calcCipher("Encrypt Me");  //Encrypt messages from alice using the key
+  var encryptedAlice = alice.calcCipher("Robbie I really hate this and I wish it worked like I wanted it to.");  //Encrypt messages from alice using the key
   var decryptedBob = bob.calcPlain(encryptedAlice);     //Bob can decrypt messages using the key
 
   console.log(encryptedAlice);                  //Show encrypted
