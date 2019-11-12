@@ -4,6 +4,31 @@ var bodyParser = require("body-parser"); //this is for being able to open JSON o
 const Symmetric = require("./symmetric.js");
 const PORT = 4000;
 
+var newMessages = [
+  {
+    id: 1,
+    author: "apple",
+    message: "Test Message 1 from Apple",
+    timestamp: new Date().getTime()
+  },
+  {
+    id: 2,
+    author: "orange",
+    message: "Test Message 2 from Orange",
+    timestamp: new Date().getTime()
+  },
+  {
+    id: 3,
+    author: "orange",
+    message: "Test Message 3 from Orange",
+    timestamp: new Date().getTime()
+  }
+];
+
+const jsonRes = {
+  result: true
+};
+
 var allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
@@ -21,34 +46,21 @@ app.listen(PORT, function() {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get("/newmsg", function(req, res) {
-  console.log("/newmsg hit!");
-  var newMessages = [
-    {
-      id: 1,
-      author: "apple",
-      message: "Test Message 1 from Apple",
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 2,
-      author: "orange",
-      message: "Test Message 2 from Orange",
-      timestamp: new Date().getTime()
-    },
-    {
-      id: 3,
-      author: "orange",
-      message: "Test Message 3 from Orange",
-      timestamp: new Date().getTime()
-    }
-  ];
+app.get("/loadmsgs", function(req, res) {
+  console.log("/loadmsgs");
   res.send(newMessages);
 });
 
-app.post("/msgrecieving", function(req, res) {
-  //req.body
-  res.send();
+app.post("/postmsgs", function(req, res) {
+  let newMsg = {
+    id: newMessages.length + 1,
+    author: req.body.author,
+    message: req.body.msgpayload,
+    timestamp: new Date().getTime()
+  };
+
+  newMessages.push(newMsg);
+  res.send(jsonRes);
 });
 
 // EXAMPLE ENDPOINT

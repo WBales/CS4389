@@ -1,10 +1,6 @@
 import React from "react";
 import "./Compose.css";
 
-// export default function Compose(props) {
-//  {props.rightItems}
-// }
-
 class Compose extends React.Component {
   constructor(props) {
     super(props);
@@ -24,13 +20,11 @@ class Compose extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    console.log(`${event.target.value}\n${this.state.currMsg}`);
+    let msgToSubmit = this.state.currMsg;
     this.setState({
       currMsg: ""
     });
-    this.props.callbackFromParent(event.target.value);
-    // pass stuff upstream
-    // https://medium.com/@ruthmpardee/passing-data-between-react-components-103ad82ebd17
+    this.props.data(msgToSubmit);
   };
 
   render(props) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Compose from "../Compose/index";
 import Toolbar from "../Toolbar";
 import ToolbarButton from "../ToolbarButton";
@@ -9,26 +9,91 @@ import axios from "axios";
 
 import "./MessageList.css";
 
-const MY_USER_ID = "apple"; //<--- The user name: probably important
+//let MY_USER_ID = "apple"; //<--- The user name: probably important
+const initMsg = [
+  {
+    id: -1,
+    author: `ChatBot`,
+    message: `Please type in a userid. Follow the example below.`,
+    timestamp: new Date().getTime()
+  },
+  {
+    id: 0,
+    author: `ChatBot`,
+    message: `/userid JohnDoe`,
+    timestamp: new Date().getTime()
+  }
+];
 
-export default function MessageList(props) {
-  const [messages, setMessages] = useState([]);
+class MessageList extends React.Component {
+  // const [messages, setMessages] = useState([]);
+  constructor(props) {
+    super(props);
+    this.state = {
+      messages: [],
+      userID_exists: false,
+      MY_USER_ID: "apple"
+    };
+  }
 
-  const msgCallback = dataToSend => {};
+  //gets the newly typed message and sends it to the server
+  // then we call rerender
+  msgCallback = dataToSend => {
+    let MY_USER_ID = this.state.MY_USER_ID;
 
-  useEffect(() => {
-    getMessages();
-  }, []);
+    if (dataToSend[0] !== "/") {
+      axios
+        .post(SERVER_IP_ADDR + "postmsgs", {
+          msgpayload: dataToSend,
+          author: MY_USER_ID
+        })
+        .then(response => {
+          this.getMessages();
+        });
+    } else {
+      let cmd = dataToSend.substring(1);
+      let space = cmd.indexOf(" ");
+      let newUserID = null;
 
-  //might have to rework this D:
-  const getMessages = () => {
-    axios.get(SERVER_IP_ADDR + "newmsg").then(response => {
-      let newMessages = response.data;
-      setMessages([...messages, ...newMessages]);
+      switch (cmd.substring(0, space)) {
+        case "userid":
+          if (space !== -1) {
+            newUserID = cmd.substring(space + 1);
+            console.log(`userid: ${newUserID}`);
+            this.setState({
+              MY_USER_ID: newUserID,
+              userID_exists: true
+            });
+          }
+          break;
+        default:
+          console.log(`Error: could not determine command ${cmd}`);
+          break;
+      }
+    }
+  };
+
+  getMessages = () => {
+    axios.get(SERVER_IP_ADDR + "loadmsgs").then(response => {
+      let newMessagesFromServer = response.data;
+      console.log(newMessagesFromServer);
+      this.setState({
+        messages: newMessagesFromServer
+      });
     });
   };
 
-  const renderMessages = () => {
+  renderMessages = () => {
+    console.log("rendering");
+    const MY_USER_ID = this.state.MY_USER_ID;
+    const userID_exists = this.state.userID_exists;
+    let messages;
+    if (userID_exists === true) {
+      messages = this.state.messages;
+    } else {
+      messages = initMsg;
+    }
+    console.log(messages);
     let i = 0;
     let messageCount = messages.length;
     let tempMessages = [];
@@ -79,6 +144,7 @@ export default function MessageList(props) {
           endsSequence={endsSequence}
           showTimestamp={showTimestamp}
           data={current}
+          message={`${current.author}: ${current.message}`}
         />
       );
 
@@ -89,31 +155,41 @@ export default function MessageList(props) {
     return tempMessages;
   };
 
-  return (
-    <div className="message-list">
-      <Toolbar
-        title="Conversation Title"
-        rightItems={[
-          <ToolbarButton
-            key="info"
-            icon="ion-ios-information-circle-outline"
-          />,
-          <ToolbarButton key="video" icon="ion-ios-videocam" />,
-          <ToolbarButton key="phone" icon="ion-ios-call" />
-        ]}
-      />
+  render() {
+    return (
+      <div className="message-list">
+        <Toolbar
+          title="Conversation Title"
+          rightItems={[
+            <ToolbarButton
+              key="info"
+              icon="ion-ios-information-circle-outline"
+            />,
+            <ToolbarButton key="video" icon="ion-ios-videocam" />,
+            <ToolbarButton key="phone" icon="ion-ios-call" />
+          ]}
+        />
 
-      <div
-        className="message-list-container"
-        callbackFromParent={this.msgCallback}
-      >
-        {renderMessages()}
+        <div className="message-list-container">{this.renderMessages()}</div>
+
+        <Compose data={this.msgCallback.bind(this)} />
       </div>
+    );
+  }
 
-      <Compose />
-    </div>
-  );
+  componentDidMount() {
+    // https://blog.logrocket.com/patterns-for-data-fetching-in-react-981ced7e5c56/
+    console.log("componentDidMount()");
+    this.timer = setInterval(() => this.getMessages(), 5000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.timer = null;
+  }
 }
+
+export default MessageList;
 
 // let newMessages = response.data.results.map(result => {
 //   return {
