@@ -5,13 +5,14 @@ class symEncrypt{
     }
 
     calcCipher(){
-
-        //Arbitrary message length limit of 16*128
+        //Arbitrary message length limit of 16*256
         var i; 
         var messageArray = [];
-        for(i = 0; i < 128; i++){
+        var plainPad = "";
+        for(i = 0; i < 256; i++){
             if(this.plainText.length != 0){
                 if(this.plainText.length > 16){
+                    //console.log(this.plainText.substring(0,16));
                     messageArray[i] = this.plainText.substring(0, 16);
                     this.plainText = this.plainText.substring(16);
                 } else {
@@ -21,7 +22,7 @@ class symEncrypt{
                     //let r = Math.floor(Math.random() * Math.floor(128));
                     while(subStr.length < 16){
                         var min = Math.ceil(32);
-                        var max = Math.floor(128);
+                        var max = Math.floor(127);
                         let r = Math.floor(Math.random() * (max - min)) + min;
                         //console.log(r);
                         r = String.fromCharCode(r);
@@ -32,11 +33,16 @@ class symEncrypt{
                     messageArray[i] = subStr;
                     this.plainText = "";
                 }
+                //console.log(messageArray[i]);
+                plainPad = plainPad + messageArray[i];
             } else {
-                i = 128;
+                i = 256;
             }
         }
         //i = 0;
+        /*
+        Hash the plain pad here
+        */
 
         var encrypted = "";
         var keyArray = (""+this.key).split("");
@@ -44,20 +50,9 @@ class symEncrypt{
             var j;
             var encryptedBlock = "";
             for(j = 0; j < messageArray[i].length; j++){
+                //console.log(messageArray[i]);
                 var checkEncrypt = messageArray[i].charCodeAt(j);
-                //console.log(checkEncrypt);
-                /*
-                if(j == 0){
-                    console.log("Encrypt: " + checkEncrypt);
-                    console.log("/n");
-                    console.log("Encrypt * key: " + (checkEncrypt * parseInt(keyArray[j])));
-                    console.log("/n");
-                    console.log("Mod: " + (messageArray[i].charCodeAt(j) * parseInt(keyArray[j])) % 96);
-                    console.log("/n");
-                    console.log("+32: " + ((messageArray[i].charCodeAt(j) * parseInt(keyArray[j])) % 96)+ 32);
-                    console.log("/n");
-                }
-                */
+
                 var encryptedChar = (((messageArray[i].charCodeAt(j) + parseInt(keyArray[j])) % 96) + 32);
                 //console.log(encryptedChar)
                 encryptedBlock = encryptedBlock + String.fromCharCode(encryptedChar);

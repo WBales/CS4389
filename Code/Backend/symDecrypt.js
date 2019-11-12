@@ -7,7 +7,7 @@ class symDecrypt{
     calcPlain(){
         var i;
         var encryptedArray = [];
-        for(i = 0; i < 128; i++){
+        for(i = 0; i < 256; i++){
             if(this.cipherText.length != 0){
                 if(this.cipherText.length > 16){
                     encryptedArray[i] = this.cipherText.substring(0, 16);
@@ -17,8 +17,9 @@ class symDecrypt{
                     this.cipherText = "";
                 }
             } else {
-                i = 128
+                i = 256;
             }
+            //console.log(encryptedArray[i]);
         }
         //i = 0;
 
@@ -33,19 +34,32 @@ class symDecrypt{
             for(j = 0; j < encryptedArray[i].length; j++){
                 var checkDecrypt = encryptedArray[i].charCodeAt(j);
                 //console.log(checkDecrypt);
-                /*
-                var decryptedChar = (((encryptedArray[i].charCodeAt(j) -32);
-                */
-                if((checkDecrypt - 32) < 32){
-                    var decryptedChar = checkDecrypt -32 + 96 - keyArray[j];
+
+                if((checkDecrypt - 32) <= 32){
+                    var decryptedChar = checkDecrypt - 32 + 96 - parseInt(keyArray[j]);
                 } else {
-                    var decryptedChar = checkDecrypt -32 - keyArray[j];
+                    var decryptedChar = checkDecrypt - 32 - parseInt(keyArray[j]);
                 }
                 //console.log(decryptedChar);
+                if(decryptedChar == 128){
+                    decryptedChar = 32;
+                }
                 decryptedBlock = decryptedBlock + String.fromCharCode(decryptedChar);
             }
+            console.log(decryptedBlock);
             decrypted = (decrypted + decryptedBlock);
         }
+        //Get hashed portion
+        if(decrypted.length > 32){
+            var hashedPortion = "";
+            for(i = decrypted.length - 32; i > decrypted.length; i++){
+                hashedPortion = hashedPortion + decrypted.charAt(i);
+            }
+        }
+        /*
+        Check the hash here
+        */
+
 
         return decrypted;
         //return (`${this.cipherText} is now decrypted with ${this.key}`)
