@@ -6,15 +6,15 @@ class Hashing {
       var hashNum = 7;
   
       for (var i = 0; i < msg.length; i++) {
-          hashNum = (hashNum * 31) + msg.charCodeAt(i);
+        hashNum = (hashNum * 31) + msg.charCodeAt(i);
       }
       var hashString = hashNum.toString();
   
       while ((hashString.length % 16) != 0) {
-          hashString = hashString + '0';
+        hashString = hashString + '0';
       }
       return hashString;
-  }
+    } 
     
   }
   
