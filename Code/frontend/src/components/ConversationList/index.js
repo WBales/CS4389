@@ -14,7 +14,7 @@ export default function ConversationList(props) {
   }, []);
 
   const getConversations = () => {
-    let newConversations = [{name: "Symmetric"}, {name: "Asymmetric"}];
+    let newConversations = [{ name: "Symmetric" }, { name: "Asymmetric" }];
     // axios.get("https://randomuser.me/api/?results=2").then(response => {
     //   let newConversations = response.data.results.map(result => {
     //     return {
@@ -24,7 +24,7 @@ export default function ConversationList(props) {
     //         "YourMomYourMomYourMomYourMom"
     //     };
     //   });
-      
+
     // });
     setConversations([...conversations, ...newConversations]);
   };
