@@ -84,7 +84,7 @@ class MessageList extends React.Component {
   };
 
   renderMessages = () => {
-    console.log("rendering");
+    console.log(`rendering ${this.props.chanName}`);
     const MY_USER_ID = this.state.MY_USER_ID;
     const userID_exists = this.state.userID_exists;
     let messages;

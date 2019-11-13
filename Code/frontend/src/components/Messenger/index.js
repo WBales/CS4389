@@ -3,35 +3,38 @@ import ConversationList from "../ConversationList";
 import MessageList from "../MessageList";
 import "./Messenger.css";
 
-export default function Messenger(props) {
-  return (
-    <div className="messenger">
-      {/* <Toolbar
-          title="Messenger"
-          leftItems={[
-            <ToolbarButton key="cog" icon="ion-ios-cog" />
-          ]}
-          rightItems={[
-            <ToolbarButton key="add" icon="ion-ios-add-circle-outline" />
-          ]}
-        /> */}
+//export default function Messenger(props)
+class Messenger extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { channelName: "Symmetric" };
+  }
 
-      {/* <Toolbar
-          title="Conversation Title"
-          rightItems={[
-            <ToolbarButton key="info" icon="ion-ios-information-circle-outline" />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
-          ]}
-        /> */}
+  changeChannel = newChannelName => {
+    //const currChanName = this.state.channelName;
+    // console.log(`Got newChannelName ${currChanName}`);
+    // if (newChannelName !== currChanName) {
+    //   this.setState({ channelName: newChannelName });
+    // }
+  };
 
-      <div className="scrollable sidebar">
-        <ConversationList />
+  render() {
+    return (
+      <div className="messenger">
+        <div className="scrollable sidebar">
+          <ConversationList
+            messengerCallback={
+              (this.changeChannel = this.changeChannel.bind(this))
+            }
+          />
+        </div>
+
+        <div className="scrollable content">
+          <MessageList chanName={this.state.channelName} />
+        </div>
       </div>
-
-      <div className="scrollable content">
-        <MessageList />
-      </div>
-    </div>
-  );
+    );
+  }
 }
+
+export default Messenger;
