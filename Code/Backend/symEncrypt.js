@@ -1,7 +1,9 @@
+const Hashing = require("./hashing.js");
+
 class symEncrypt{
     constructor (plainText, key){
-        this.plainText = plainText
-        this.key = key
+        this.plainText = plainText;
+        this.key = key;
     }
 
     calcCipher(){
@@ -12,24 +14,17 @@ class symEncrypt{
         for(i = 0; i < 256; i++){
             if(this.plainText.length != 0){
                 if(this.plainText.length > 16){
-                    //console.log(this.plainText.substring(0,16));
                     messageArray[i] = this.plainText.substring(0, 16);
                     this.plainText = this.plainText.substring(16);
                 } else {
-                    //console.log(this.plainText.substring(0));
                     var subStr = this.plainText.substring(0);
-                    //let f = Math.floor(128);
-                    //let r = Math.floor(Math.random() * Math.floor(128));
                     while(subStr.length < 16){
-                        var min = Math.ceil(32);
-                        var max = Math.floor(127);
+                        var min = Math.ceil(33);
+                        var max = Math.floor(126);
                         let r = Math.floor(Math.random() * (max - min)) + min;
-                        //console.log(r);
                         r = String.fromCharCode(r);
-                        //console.log(r);
                         subStr = (subStr + r);
                     }
-                    //console.log(subStr);
                     messageArray[i] = subStr;
                     this.plainText = "";
                 }
@@ -39,10 +34,12 @@ class symEncrypt{
                 i = 256;
             }
         }
-        //i = 0;
-        /*
-        Hash the plain pad here
-        */
+        //console.log(plainPad);
+        var _hashing = new Hashing();
+        var plainPad = _hashing.simpleHash(plainPad);
+        //console.log("Hash from encrypt: " + plainPad);
+
+        messageArray[messageArray.length] = plainPad;
 
         var encrypted = "";
         var keyArray = (""+this.key).split("");
@@ -50,21 +47,16 @@ class symEncrypt{
             var j;
             var encryptedBlock = "";
             for(j = 0; j < messageArray[i].length; j++){
-                //console.log(messageArray[i]);
-                var checkEncrypt = messageArray[i].charCodeAt(j);
-
-                var encryptedChar = (((messageArray[i].charCodeAt(j) + parseInt(keyArray[j])) % 96) + 32);
-                //console.log(encryptedChar)
+                var encryptedChar = (messageArray[i].charCodeAt(j) + (5 * parseInt(keyArray[j])) + 10);
+                if(encryptedChar > 126){
+                    encryptedChar = 32 + (encryptedChar - 126);
+                }
                 encryptedBlock = encryptedBlock + String.fromCharCode(encryptedChar);
-                //console.log(String.fromCharCode(encryptedChar));
             }
             //console.log(messageArray[i]);
             encrypted = (encrypted + encryptedBlock);
         }
-        //console.log(encrypted);
-
-        return encrypted;
-        //return (`${this.plainText} is now encrypted with ${this.key}`)
+        return (encrypted);
     }
 }
 

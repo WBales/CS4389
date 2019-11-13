@@ -1,7 +1,9 @@
+const Hashing = require("./hashing.js");
+
 class symDecrypt{
     constructor (cipherText, key){
-        this.cipherText = cipherText
-        this.key = key
+        this.cipherText = cipherText;
+        this.key = key;
     }
     
     calcPlain(){
@@ -19,50 +21,45 @@ class symDecrypt{
             } else {
                 i = 256;
             }
-            //console.log(encryptedArray[i]);
         }
-        //i = 0;
 
         var decrypted = "";
         var keyArray = (""+this.key).split("");
         //console.log("DECRYPT VALUES")
-        //Not Decrypting with key
-        //Algorithm is incorrect
         for(i = 0; i < encryptedArray.length; i++){
             var j;
             var decryptedBlock = "";
             for(j = 0; j < encryptedArray[i].length; j++){
                 var checkDecrypt = encryptedArray[i].charCodeAt(j);
-                //console.log(checkDecrypt);
-
-                if((checkDecrypt - 32) <= 32){
-                    var decryptedChar = checkDecrypt - 32 + 96 - parseInt(keyArray[j]);
-                } else {
-                    var decryptedChar = checkDecrypt - 32 - parseInt(keyArray[j]);
-                }
-                //console.log(decryptedChar);
-                if(decryptedChar == 128){
-                    decryptedChar = 32;
+                if(checkDecrypt )
+                var decryptedChar = encryptedArray[i].charCodeAt(j) - (5 * parseInt(keyArray[j])) - 10
+                if(decryptedChar < 32){
+                    decryptedChar = 126 - (32 - decryptedChar);
                 }
                 decryptedBlock = decryptedBlock + String.fromCharCode(decryptedChar);
             }
-            console.log(decryptedBlock);
+            //console.log(decryptedBlock);
             decrypted = (decrypted + decryptedBlock);
         }
         //Get hashed portion
-        if(decrypted.length > 32){
+        if(decrypted.length > 16){
             var hashedPortion = "";
-            for(i = decrypted.length - 32; i > decrypted.length; i++){
+            for(i = decrypted.length - 16; i < decrypted.length; i++){
                 hashedPortion = hashedPortion + decrypted.charAt(i);
             }
         }
-        /*
-        Check the hash here
-        */
+        decrypted = decrypted.substring(0, (decrypted.length - 16))
 
-
-        return decrypted;
-        //return (`${this.cipherText} is now decrypted with ${this.key}`)
+        var _hashing = new Hashing();
+        //console.log(decrypted);
+        var plainHash = _hashing.simpleHash(decrypted);
+        //console.log("Hash from decrypt: " + plainHash);
+        if(plainHash == hashedPortion){
+            console.log("Hash: " + plainHash + " : Matches")
+            return decrypted;
+        } else {
+            return "Hash not matching";
+        }
     }
 }
 

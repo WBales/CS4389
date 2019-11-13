@@ -39,7 +39,7 @@ class sessionKey{
             key = parseInt(sub);
         }
         
-        console.log(key);
+        console.log("Key : " + key);
 
         return (key);
         //return this.firstKey * this.secondKey
