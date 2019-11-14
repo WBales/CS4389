@@ -39,7 +39,7 @@ app.listen(PORT, function() {
   var sessionKey = new SessionKey(alice, bob);  //Generate a session key for the conversation
   //sessionKey.setSessionKeys();
 
-  var encryptedAlice = alice.calcCipher("A small price to pay for salvation.");  //Encrypt messages from alice using the key
+  var encryptedAlice = alice.calcCipher("ZAIN STILL DOESN'T TRUST ME.1234567890!@#$%^&*()");  //Encrypt messages from alice using the key
   var decryptedBob = bob.calcPlain(encryptedAlice);     //Bob can decrypt messages using the key
 
   console.log("Encrypted: " + encryptedAlice);                  //Show encrypted

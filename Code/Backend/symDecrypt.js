@@ -55,7 +55,7 @@ class symDecrypt{
         var plainHash = _hashing.simpleHash(decrypted);
         //console.log("Hash from decrypt: " + plainHash);
         if(plainHash == hashedPortion){
-            console.log("Hash: " + plainHash + " : Matches")
+            console.log("Hash: " + plainHash + " :Matches")
             return decrypted;
         } else {
             return "Hash not matching";

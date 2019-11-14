@@ -3,14 +3,15 @@
 class Hashing {
     // 
     simpleHash(msg) {
-      var hashNum = 7;
+      var hashNum = 0;
+      var prime = 7;
       
       for (var i = 0; i < msg.length; i++) {
-        hashNum = (hashNum * msg.charCodeAt(i));
+        hashNum = hashNum + (prime * msg.charCodeAt(i));
         //console.log(hashNum);
       }
 
-      hashNum = hashNum % 65543;
+      hashNum = hashNum % 5953474341373129;
 
       var hashString = hashNum.toString();
 
