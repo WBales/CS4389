@@ -4,8 +4,10 @@ var bodyParser = require("body-parser"); //this is for being able to open JSON o
 const Player = require("./player.js");
 const SessionKey = require("./sessionKey.js");
 const PORT = 4000;
+const sessionKey = 1470229811036160;
 
 var newMessages = [];
+var user = new Player(12345);
 
 const jsonRes = {
   result: true
@@ -26,55 +28,39 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/loadmsgs", function(req, res) {
   console.log("/loadmsgs");
-  res.send(newMessages);
+  console.log(newMessages);
+  let encryptMessages = [];
+  // encryptMessages.forEach(element => {
+  //   element.message = user.calcCipher(element.message);
+  // });
+  for (let i = 0; i < newMessages.length; i++) {
+    encryptMessages.push({
+      id: newMessages[i].id,
+      author: newMessages[i].author,
+      message: user.calcCipher(newMessages[i].message),
+      timestamp: newMessages[i].timestamp
+    });
+  }
+  console.log(encryptMessages);
+  res.send(encryptMessages);
 });
 
 app.post("/postmsgs", function(req, res) {
+  console.log("/postmsgs");
+  console.log(`Got encrypt: ${req.body.msgpayload}`);
   let newMsg = {
     id: newMessages.length + 1,
     author: req.body.author,
-    message: req.body.msgpayload,
+    message: user.calcPlain(req.body.msgpayload),
     timestamp: new Date().getTime()
   };
+  console.log(`got decrypt msg: ${newMsg.message}`);
 
   newMessages.push(newMsg);
   res.send(jsonRes);
 });
 
-// EXAMPLE ENDPOINT
-// This demonstrates how an endpoint is written in Node.JS w/ Express
-app.post("/testendpoint", function(req, res) {
-  console.log("DEBUG: ", req.body);
-  //var sessionKey = new SessionKey(1234, 6789);
-  var alice = new Player(1234);
-  var bob = new Player(6789);
-  var sessionKey2 = new SessionKey(alice, bob);
-
-
-  var encryptedAlice = alice.calcCipher("Encrypt Me")
-  var decryptedBob = bob.calcPlain(encryptedAlice)
-
-  //this demonstrates what a JSON messeage is formatted like
-  var testJSON = {
-    name: "YourMom", //Gotem
-    class: "CS 4389",
-    tech: "Node.JS & Express"
-  };
-
-  res.send(testJSON);
-});
-
 app.listen(PORT, function() {
+  user.sessionKey = sessionKey;
   console.log(`Security app listening on port ${PORT}!`);
-  var alice = new Player(12345);                 //Given some key for a player
-  var bob = new Player(56789);                   //Given some key for another player
-  var sessionKey = new SessionKey(alice, bob);  //Generate a session key for the conversation
-  //sessionKey.setSessionKeys();
-
-  var encryptedAlice = alice.calcCipher("ZAIN STILL DOESN'T TRUST ME.1234567890!@#$%^&*()");  //Encrypt messages from alice using the key
-  var decryptedBob = bob.calcPlain(encryptedAlice);     //Bob can decrypt messages using the key
-
-  console.log("Encrypted: " + encryptedAlice);                  //Show encrypted
-  console.log("Decrypted: " + decryptedBob);                    //Show decrypted
 });
-

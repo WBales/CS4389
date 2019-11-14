@@ -24,6 +24,7 @@ const initMsg = [
     timestamp: new Date().getTime()
   }
 ];
+const sessionKey = 1470229811036160;
 
 class MessageList extends React.Component {
   // const [messages, setMessages] = useState([]);
@@ -44,7 +45,7 @@ class MessageList extends React.Component {
     if (dataToSend[0] !== "/") {
       axios
         .post(SERVER_IP_ADDR + "postmsgs", {
-          msgpayload: dataToSend,
+          msgpayload: this.calcCipher(dataToSend),
           author: MY_USER_ID
         })
         .then(response => {
@@ -66,6 +67,24 @@ class MessageList extends React.Component {
             });
           }
           break;
+        case "encrypt":
+          let encryptArray = this.state.messages;
+          encryptArray.forEach(element => {
+            element.message = this.calcCipher(element.message);
+          });
+          this.setState({
+            messages: encryptArray
+          });
+          break;
+        case "decrypt":
+          let decryptArray = this.state.messages;
+          decryptArray.forEach(element => {
+            element.message = this.calcPlain(element.message);
+          });
+          this.setState({
+            messages: decryptArray
+          });
+          break;
         default:
           console.log(`Error: could not determine command ${cmd}`);
           break;
@@ -77,6 +96,9 @@ class MessageList extends React.Component {
     axios.get(SERVER_IP_ADDR + "loadmsgs").then(response => {
       let newMessagesFromServer = response.data;
       console.log(newMessagesFromServer);
+      newMessagesFromServer.forEach(element => {
+        element.message = this.calcPlain(element.message);
+      });
       this.setState({
         messages: newMessagesFromServer
       });
@@ -186,6 +208,147 @@ class MessageList extends React.Component {
   componentWillUnmount() {
     clearInterval(this.timer);
     this.timer = null;
+  }
+
+  simpleHash(msg) {
+    var hashNum = 0;
+    var prime = 7;
+
+    for (var i = 0; i < msg.length; i++) {
+      hashNum = hashNum + prime * msg.charCodeAt(i);
+      //console.log(hashNum);
+    }
+
+    hashNum = hashNum % 5953474341373129;
+
+    var hashString = hashNum.toString();
+
+    while (hashString.length < 16) {
+      hashNum = hashNum * 2;
+      hashString = hashNum.toString();
+    }
+
+    if (hashString.length > 16) {
+      hashString = hashString.substring(0, 16);
+    }
+
+    return hashString;
+  }
+
+  calcPlain(cipherText) {
+    console.log("Entering calcPlain");
+    console.log(cipherText);
+    var i;
+    var encryptedArray = [];
+    for (i = 0; i < 256; i++) {
+      if (cipherText.length !== 0) {
+        if (cipherText.length > 16) {
+          encryptedArray[i] = cipherText.substring(0, 16);
+          cipherText = cipherText.substring(16);
+        } else {
+          encryptedArray[i] = cipherText.substring(0);
+          cipherText = "";
+        }
+      } else {
+        i = 256;
+      }
+    }
+
+    var decrypted = "";
+    var keyArray = ("" + sessionKey).split("");
+    //console.log("DECRYPT VALUES")
+    for (i = 0; i < encryptedArray.length; i++) {
+      var j;
+      var decryptedBlock = "";
+      for (j = 0; j < encryptedArray[i].length; j++) {
+        var checkDecrypt = encryptedArray[i].charCodeAt(j);
+        if (checkDecrypt)
+          var decryptedChar =
+            encryptedArray[i].charCodeAt(j) - 5 * parseInt(keyArray[j]) - 10;
+        if (decryptedChar < 32) {
+          decryptedChar = 126 - (32 - decryptedChar);
+        }
+        decryptedBlock = decryptedBlock + String.fromCharCode(decryptedChar);
+      }
+      //console.log(decryptedBlock);
+      decrypted = decrypted + decryptedBlock;
+    }
+    //Get hashed portion
+    if (decrypted.length > 16) {
+      var hashedPortion = "";
+      for (i = decrypted.length - 16; i < decrypted.length; i++) {
+        hashedPortion = hashedPortion + decrypted.charAt(i);
+      }
+    }
+    decrypted = decrypted.substring(0, decrypted.length - 16);
+
+    //console.log(decrypted);
+    var plainHash = this.simpleHash(decrypted);
+    //console.log("Hash from decrypt: " + plainHash);
+    if (plainHash === hashedPortion) {
+      console.log("Hash: " + plainHash + " :Matches");
+      console.log(`Decrypted: ${decrypted}`);
+      return decrypted;
+    } else {
+      return "Hash not matching";
+    }
+  }
+
+  calcCipher(plainText) {
+    //Arbitrary message length limit of 16*256
+    console.log("Entering calcCipher");
+    console.log(plainText);
+    var i;
+    var messageArray = [];
+    var plainPad = "";
+    for (i = 0; i < 256; i++) {
+      if (plainText.length !== 0) {
+        if (plainText.length > 16) {
+          messageArray[i] = plainText.substring(0, 16);
+          plainText = plainText.substring(16);
+        } else {
+          var subStr = plainText.substring(0);
+          while (subStr.length < 16) {
+            var min = Math.ceil(33);
+            var max = Math.floor(126);
+            let r = Math.floor(Math.random() * (max - min)) + min;
+            r = String.fromCharCode(r);
+            subStr = subStr + r;
+          }
+          messageArray[i] = subStr;
+          plainText = "";
+        }
+        //console.log(messageArray[i]);
+        plainPad = plainPad + messageArray[i];
+      } else {
+        i = 256;
+      }
+    }
+    //console.log(plainPad);
+    // eslint-disable-next-line no-undef
+    plainPad = this.simpleHash(plainPad);
+    //console.log("Hash from encrypt: " + plainPad);
+
+    messageArray[messageArray.length] = plainPad;
+
+    var encrypted = "";
+    var keyArray = ("" + sessionKey).split("");
+    for (i = 0; i < messageArray.length; i++) {
+      var j;
+      var encryptedBlock = "";
+      for (j = 0; j < messageArray[i].length; j++) {
+        var encryptedChar =
+          messageArray[i].charCodeAt(j) + 5 * parseInt(keyArray[j]) + 10;
+        if (encryptedChar > 126) {
+          encryptedChar = 32 + (encryptedChar - 126);
+        }
+        encryptedBlock = encryptedBlock + String.fromCharCode(encryptedChar);
+      }
+      //console.log(messageArray[i]);
+      encrypted = encrypted + encryptedBlock;
+    }
+    console.log(`Encrypted: ${encrypted}`);
+    return encrypted;
   }
 }
 
