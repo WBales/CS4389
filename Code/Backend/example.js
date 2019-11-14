@@ -3,43 +3,11 @@ var app = express();
 var bodyParser = require("body-parser"); //this is for being able to open JSON objects
 const Player = require("./player.js");
 const SessionKey = require("./sessionKey.js");
-const PORT = 4000;
-
-var newMessages = [];
-
-const jsonRes = {
-  result: true
-};
-
-var allowCrossDomain = function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-};
-
-app.use(allowCrossDomain);
+const PORT = 3000;
 
 // Parse incoming requests data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.get("/loadmsgs", function(req, res) {
-  console.log("/loadmsgs");
-  res.send(newMessages);
-});
-
-app.post("/postmsgs", function(req, res) {
-  let newMsg = {
-    id: newMessages.length + 1,
-    author: req.body.author,
-    message: req.body.msgpayload,
-    timestamp: new Date().getTime()
-  };
-
-  newMessages.push(newMsg);
-  res.send(jsonRes);
-});
 
 // EXAMPLE ENDPOINT
 // This demonstrates how an endpoint is written in Node.JS w/ Express
@@ -65,7 +33,7 @@ app.post("/testendpoint", function(req, res) {
 });
 
 app.listen(PORT, function() {
-  console.log(`Security app listening on port ${PORT}!`);
+  //console.log(`Security app listening on port ${PORT}!`);
   var alice = new Player(12345);                 //Given some key for a player
   var bob = new Player(56789);                   //Given some key for another player
   var sessionKey = new SessionKey(alice, bob);  //Generate a session key for the conversation
@@ -77,4 +45,3 @@ app.listen(PORT, function() {
   console.log("Encrypted: " + encryptedAlice);                  //Show encrypted
   console.log("Decrypted: " + decryptedBob);                    //Show decrypted
 });
-
