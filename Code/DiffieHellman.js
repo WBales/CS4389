@@ -1,18 +1,11 @@
 // Note: This still needs logic to confirm that both Secret keys are equivilant for Bob and Alice   if(S_Bob == S_Alice){/*open secure connection*/};
 
-/*var Bob_message = new Object(),
+var Bob_message = new Object(),
     Bob_str = 'Bob        This is my encrypted message hard coded in.',
-
 
 var Alice_message = new Alice(),
     Alice_str = 'Alice      This is my encrypted message hard coded in.',
-*/
 
-
-
-
-
-/*
 class Bob {
   constructor(bob, public_prime_base, public_prime_modulus, bob_priv_key, alice_pub_key, bob_pub_key, s_key_Alice, s_key_Bob, Bob_str) {
 
@@ -25,7 +18,6 @@ class Bob {
       this.bob_pub_key = 19;                //    B
       this.s_key_Alice = 0;                           // Comparison value    Note: open connection if these values match
       this.s_key_Bob = 0;                             // Comparison value    Note: open connection if these values match
-
   }
 
   function() {
@@ -43,7 +35,6 @@ class Bob {
       }
   }// encrypts a message based on Bob's secret key
 
-
   function() {
       "use strict";
       s_key_Bob_value = function decrypt_Alice_Incoming(alice_pub_key) {        // Bob's Decryption algorithm
@@ -60,7 +51,6 @@ class Bob {
   }
 }       //  Bob's Class
 
-
 class Alice {
   constructor(alice, public_prime_base, public_prime_modulus, alice_priv_key, alice_pub_key, bob_pub_key, s_key_Alice, s_key_Bob, Alice_str) {
 
@@ -74,8 +64,6 @@ class Alice {
       this.s_key_Alice = 0;                           // Comparison value    Note: open connection if these values match
       this.s_key_Bob = 0;                             // Comparison value    Note: open connection if these values match
   }      // instatiate object with    // let key_sender_1 = Alice("name", "5", "23", "6", "8", "19", "0", "0");
-
-
 
   function() {
       "use strict";
@@ -92,7 +80,6 @@ class Alice {
           return X;
       }
   }// encrypts a message based on Alice's secret key
-
 
   get ciphertext() {
       return this.plaintext;
@@ -111,19 +98,18 @@ class Alice {
           }
           return Z;
       }
-
   }// end of class Alice
-  */
+
 
   //   Note: need to put this into scope
-  //export default class Bob{}
-  //export default class Alice{}
+  export default class Bob{}
+  export default class Alice{}
 
 
 
   // USAGE in another file (ie: to be used in main.js)   
-  //const Diffie = require("./diffie.js");  //includes the class in another file
-  //const diffieEncryp = new Diffie
+  const Diffie = require("./diffie.js");  //includes the class in another file
+  const diffieEncryp = new Diffie
 
 
 
@@ -149,14 +135,17 @@ function gcd_two_numbers(alice, bob) {
     return alice;
 }
 
+/*
+Test Scripts for debugging purposes
 //console.log("Hello world");
-//console.log("alice = " + alice);
-//console.log("bob = " + bob);
+console.log("alice = " + alice);
+console.log("bob = " + bob);
+*/
 
   while (not_coprimes) {
     
     function getRandomInt(min, max){
-alice = 
+//alice =// 
 
     }
     Math.floor((Math.random(alice) * 1000) + 2);    // Generates two random numbers
@@ -183,25 +172,21 @@ alice =
     }
   }// finds two numbers that are co-prime
 
+bob_pub_key_value = bob_encrypt_shared_secret_Key_Outgoing(bob_priv_key);     // gets the shared secret key for the Encryption of Bob's message
+s_key_Bob_value = decrypt_Alice_Incoming(alice_pub_key);             // gets the shared secret key for the Decryption of Alice's message
+alice_pub_key_value = alice_encrypt_shared_secret_Key(alice_priv_key); // gets the shared secret key for the Encryption of Alice's message
+s_key_Alice_value = decrypt_Bob_Incoming(bob_pub_key);             // gets the shared secret key for the Decryption of Bob's message
 
-
-//bob_pub_key_value = bob_encrypt_shared_secret_Key_Outgoing(bob_priv_key);     // gets the shared secret key for the Encryption of Bob's message
-//s_key_Bob_value = decrypt_Alice_Incoming(alice_pub_key);             // gets the shared secret key for the Decryption of Alice's message
-//alice_pub_key_value = alice_encrypt_shared_secret_Key(alice_priv_key); // gets the shared secret key for the Encryption of Alice's message
-//s_key_Alice_value = decrypt_Bob_Incoming(bob_pub_key);             // gets the shared secret key for the Decryption of Bob's message
 //Note: still need to create a function to recieve and send the messages from/to Bob
 //Note: still need to create a function to recieve and send the messages from/to Alice
-
 
 //displays the values for the keys
 console.log("alice = " + alice);
 console.log("bob = " + bob);
-//console.log("bob_pub_key_value = " + bob_pub_key_value);
-//console.log("bob_pub_key_value = " + s_key_Bob_value);
-//console.log("bob_pub_key_value = " + alice_pub_key_value);
-//console.log("bob_pub_key_value = " + s_key_Alice_value);
+console.log("bob_pub_key_value = " + bob_pub_key_value);
+console.log("bob_pub_key_value = " + s_key_Bob_value);
+console.log("bob_pub_key_value = " + alice_pub_key_value);
+console.log("bob_pub_key_value = " + s_key_Alice_value);
 }
 
 create_Diffie_Hellman_Keys();
-
-
