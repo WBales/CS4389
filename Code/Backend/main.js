@@ -1,29 +1,66 @@
 var express = require("express"); //spins up the server
 var app = express();
 var bodyParser = require("body-parser"); //this is for being able to open JSON objects
-const Symmetric = require("./symmetric.js");
-const PORT = 3000;
+const Player = require("./player.js");
+const SessionKey = require("./sessionKey.js");
+const PORT = 4000;
+const sessionKey = 1470229811036160;
+
+var newMessages = [];
+var server = new Player(12345);
+
+const jsonRes = {
+  result: true
+};
+
+var allowCrossDomain = function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+};
+
+app.use(allowCrossDomain);
 
 // Parse incoming requests data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// EXAMPLE ENDPOINT
-// This demonstrates how an endpoint is written in Node.JS w/ Express
-app.post("/testendpoint", function(req, res) {
-  console.log("DEBUG: ", req.body);
-  var x = new Symmetric("ADWADWAWAD", 14515151); //just an example
+app.get("/loadmsgs", function(req, res) {
+  console.log("/loadmsgs");
+  console.log(newMessages);
+  let encryptMessages = [];
+  // encryptMessages.forEach(element => {
+  //   element.message = server.calcCipher(element.message);
+  // });
+  for (let i = 0; i < newMessages.length; i++) {
+    encryptMessages.push({
+      id: newMessages[i].id,
+      author: newMessages[i].author,
+      message: server.calcCipher(newMessages[i].message),
+      timestamp: newMessages[i].timestamp
+    });
+  }
+  console.log(encryptMessages);
+  res.send(encryptMessages);
+});
 
-  //this demonstrates what a JSON messeage is formatted like
-  var testJSON = {
-    name: "YourMom",
-    class: "CS 4389",
-    tech: "Node.JS & Express"
+app.post("/postmsgs", function(req, res) {
+  console.log("/postmsgs");
+  console.log(`Got encrypt: ${req.body.msgpayload}`);
+  let newMsg = {
+    id: newMessages.length + 1,
+    author: req.body.author,
+    message: server.calcPlain(req.body.msgpayload),
+    timestamp: new Date().getTime()
   };
+  console.log(`got decrypt msg: ${newMsg.message}`);
 
-  res.send(testJSON);
+  newMessages.push(newMsg);
+  res.send(jsonRes);
 });
 
 app.listen(PORT, function() {
+  server.sessionKey = sessionKey;
   console.log(`Security app listening on port ${PORT}!`);
 });
