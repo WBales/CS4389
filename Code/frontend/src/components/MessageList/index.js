@@ -1,7 +1,7 @@
 import React from "react";
 import Compose from "../Compose/index";
 import Toolbar from "../Toolbar";
-import ToolbarButton from "../ToolbarButton";
+//import ToolbarButton from "../ToolbarButton";
 import Message from "../Message";
 import moment from "moment";
 import { SERVER_IP_ADDR } from "../../constants";
@@ -181,15 +181,15 @@ class MessageList extends React.Component {
     return (
       <div className="message-list">
         <Toolbar
-          title="Conversation Title"
-          rightItems={[
-            <ToolbarButton
-              key="info"
-              icon="ion-ios-information-circle-outline"
-            />,
-            <ToolbarButton key="video" icon="ion-ios-videocam" />,
-            <ToolbarButton key="phone" icon="ion-ios-call" />
-          ]}
+          title="Symmetric Chat Channel"
+          // rightItems={[
+          //   <ToolbarButton
+          //     key="info"
+          //     icon="ion-ios-information-circle-outline"
+          //   />,
+          //   <ToolbarButton key="video" icon="ion-ios-videocam" />,
+          //   <ToolbarButton key="phone" icon="ion-ios-call" />
+          // ]}
         />
 
         <div className="message-list-container">{this.renderMessages()}</div>

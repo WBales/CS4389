@@ -7,7 +7,7 @@ const PORT = 4000;
 const sessionKey = 1470229811036160;
 
 var newMessages = [];
-var user = new Player(12345);
+var server = new Player(12345);
 
 const jsonRes = {
   result: true
@@ -31,13 +31,13 @@ app.get("/loadmsgs", function(req, res) {
   console.log(newMessages);
   let encryptMessages = [];
   // encryptMessages.forEach(element => {
-  //   element.message = user.calcCipher(element.message);
+  //   element.message = server.calcCipher(element.message);
   // });
   for (let i = 0; i < newMessages.length; i++) {
     encryptMessages.push({
       id: newMessages[i].id,
       author: newMessages[i].author,
-      message: user.calcCipher(newMessages[i].message),
+      message: server.calcCipher(newMessages[i].message),
       timestamp: newMessages[i].timestamp
     });
   }
@@ -51,7 +51,7 @@ app.post("/postmsgs", function(req, res) {
   let newMsg = {
     id: newMessages.length + 1,
     author: req.body.author,
-    message: user.calcPlain(req.body.msgpayload),
+    message: server.calcPlain(req.body.msgpayload),
     timestamp: new Date().getTime()
   };
   console.log(`got decrypt msg: ${newMsg.message}`);
@@ -61,6 +61,6 @@ app.post("/postmsgs", function(req, res) {
 });
 
 app.listen(PORT, function() {
-  user.sessionKey = sessionKey;
+  server.sessionKey = sessionKey;
   console.log(`Security app listening on port ${PORT}!`);
 });
