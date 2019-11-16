@@ -1,1 +1,18 @@
-INIT
+To run the application, open each folder - "frontend" and "backend" - in separate windows in Visual Studio Code. 
+Do this with the command "File->Open...". 
+Then select the folder of "frontend" and/or "backend". (be sure to open BOTH of these folders in DIFFERENT windows. You should have 2 windows total open, one of each application).
+From there, type into the Visual Studio Code terminal of each project "npm install" and then type in "npm start" or "node start" (do this at the root of each project directory!!). 
+This will make each project download its dependencies, and start, respectively. 
+The backend will launch and begin listening for GET and POST calls from the frontend. 
+The frontend will launch into your default browser. 
+From there, it should be self explanatory. 
+Open new tabs on your browser and access http://localhost:3000/ to create more "users". This will demonstrate that multiple clients can chat and be encrypted.
+See the console of your browser, and the terminal of the backend app, to see the logs of the encryption/decryption process.
+
+NOTE: If you do not have Node Package Manager installed (NPM), then you will not be able to run the code. Install it from the web if you do not have it.
+
+If you have any questions, please do not hesitate to reach out to me, Robbie Castillo: 
+Text: 972-522-8254
+Email: rac150030@utdallas.edu
+
+I am more than happy to clarify and help with anything. We can demo this to you as well.
